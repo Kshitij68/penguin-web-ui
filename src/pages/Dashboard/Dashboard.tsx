@@ -4,17 +4,13 @@ import { Toaster } from "react-hot-toast";
 // COMPONENTS
 import StepProgress from "../../components/common/StepProgress/StepProgress";
 import Button from "../../components/common/Button/Button";
-import SelectDatabase from "./components/SelectDatabase/SelectDatabase";
+import SelectDatabase, { SelectDatabaseProps } from "./components/SelectDatabase/SelectDatabase";
 import ConfigureAccess from "./components/ConfigureAccess/ConfigureAccess";
-import SelectQuery from "./components/SelectQuery/SelectQuery";
+import SelectQuery, { SelectQueryProps } from "./components/SelectQuery/SelectQuery";
 import Loader from "../../components/common/Loader/Loader";
 
 // CONTEXT
 import { useDataContext } from "../../context/DataContext";
-
-// TYPES & INTERFACES
-import { SelectDatabaseProps } from "./components/SelectDatabase/SelectDatabase";
-import { SelectQueryProps } from "./components/SelectQuery/SelectQuery";
 
 // CSS
 import "./Dashboard.scss";
@@ -33,9 +29,9 @@ export type FormData = {
 
 type ComponentMap = {
   [key: number]:
-    | React.FC<SelectDatabaseProps>
-    | React.FC<SelectQueryProps>
-    | React.FC<{}>;
+  | React.FC<SelectDatabaseProps>
+  | React.FC<SelectQueryProps>
+  | React.FC<{}>;
 };
 
 const STEP_COMPONENTS: ComponentMap = {

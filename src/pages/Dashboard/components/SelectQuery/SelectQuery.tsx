@@ -1,8 +1,8 @@
 import React from "react";
-import Field from "../../../components/common/Field/Field";
+import Field from "../../../../components/common/Field/Field";
 
 // INTERFACE & TYPES
-import { FormData } from "../Dashboard";
+import { FormData } from "../../Dashboard";
 
 export type SelectQueryProps = {
   formData: FormData;

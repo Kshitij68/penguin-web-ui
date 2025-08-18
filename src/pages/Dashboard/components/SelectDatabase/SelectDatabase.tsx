@@ -1,11 +1,11 @@
 import React from "react";
 
 // COMPONENTS
-import Field from "../../../components/common/Field/Field";
+import Field from "../../../../components/common/Field/Field";
 
 // INTERFACE & TYPES
-import { FormData } from "../Dashboard";
-import { useDataContext } from "../../../context/DataContext";
+import { FormData } from "../../Dashboard";
+import { useDataContext } from "../../../../context/DataContext";
 
 export type SelectDatabaseProps = {
   formData: FormData;
