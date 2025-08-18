@@ -7,7 +7,9 @@
   border: none;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
   text-decoration: none; // Ensure consistency if used as a link styled as a button
   position: relative; // For spinner positioning
@@ -16,157 +18,152 @@
     outline: none;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); // Subtle focus outline
   }
-}
 
-// Text inside the button
-&__text {
-  // Add any specific styles for the text if needed
-}
+  // Icon inside the button
+  &__icon {
+    display: inline-flex; // Ensure icon respects text baseline
+    align-items: center;
+    justify-content: center;
 
-// Icon inside the button
-&__icon {
-  display: inline-flex; // Ensure icon respects text baseline
-  align-items: center;
-  justify-content: center;
+    &--left {
+      margin-right: 0.5rem; // Specific icon spacing
+    }
 
-  &--left {
-    margin-right: 0.5rem; // Specific icon spacing
+    &--right {
+      margin-left: 0.5rem;
+    }
   }
 
-  &--right {
-    margin-left: 0.5rem;
-  }
-}
-
-// Loading spinner
-&__spinner {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid currentColor; // Spinner border color based on button text color
-  border-color: transparent;
-  border-radius: 50%;
-  animation: common-button-spin 0.6s linear infinite;
-  vertical-align: middle;
-  margin-right: 0.5rem; // Space between spinner and text
-}
-
-// Keyframes for the spinner animation
-@keyframes common-button-spin {
-  to {
-    transform: rotate(1turn);
-  }
-}
-
-// Variants
-&--primary {
-  background-color: #007bff;
-  color: white;
-  &:hover:not([disabled]) {
-    background-color: #0056b3;
-  }
-  &:active:not([disabled]) {
-    background-color: #004085;
-  }
-}
-
-&--secondary {
-  background-color: #6c757d;
-  color: white;
-  &:hover:not([disabled]) {
-    background-color: #5a6268;
-  }
-  &:active:not([disabled]) {
-    background-color: #4e555b;
-  }
-}
-
-&--danger {
-  background-color: #dc3545;
-  color: white;
-  &:hover:not([disabled]) {
-    background-color: #c82333;
-  }
-  &:active:not([disabled]) {
-    background-color: #bd2130;
-  }
-}
-
-&--outlined {
-  background-color: transparent;
-  border: 1px solid #007bff;
-  color: #007bff;
-
-  &:hover:not([disabled]) {
-    background-color: #e9f5ff;
-    border-color: #0056b3;
-    color: #0056b3;
+  // Loading spinner
+  &__spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor; // Spinner border color based on button text color
+    border-color: transparent;
+    border-radius: 50%;
+    animation: common-button-spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 0.5rem; // Space between spinner and text
   }
 
-  &:active:not([disabled]) {
-    background-color: #cce5ff;
-    border-color: #004085;
-    color: #004085;
-  }
-}
-
-&--text {
-  background-color: transparent;
-  color: #007bff;
-  padding: 0.5rem 0.75rem; // Text buttons are usually less padded
-
-  &:hover:not([disabled]) {
-    background-color: rgba(0, 123, 255, 0.08);
-    color: #0056b3;
+  // Keyframes for the spinner animation
+  @keyframes common-button-spin {
+    to {
+      transform: rotate(1turn);
+    }
   }
 
-  &:active:not([disabled]) {
-    background-color: rgba(0, 123, 255, 0.15);
-    color: #004085;
+  // Variants
+  &--primary {
+    background-color: #007bff;
+    color: white;
+    &:hover:not([disabled]) {
+      background-color: #0056b3;
+    }
+    &:active:not([disabled]) {
+      background-color: #004085;
+    }
   }
-}
 
-// Sizes
-&--small {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-}
-
-&--medium {
-  padding: 0.75rem 1.25rem;
-  font-size: 1rem;
-}
-
-&--large {
-  padding: 1rem 1.75rem;
-  font-size: 1.125rem;
-}
-
-// States
-&--loading {
-  .common-button__text {
-    visibility: hidden; // Hide text during loading
+  &--secondary {
+    background-color: #6c757d;
+    color: white;
+    &:hover:not([disabled]) {
+      background-color: #5a6268;
+    }
+    &:active:not([disabled]) {
+      background-color: #4e555b;
+    }
   }
-  .common-button__icon {
-    visibility: hidden; // Hide icon during loading
-  }
-  .common-button__spinner {
-    position: absolute; // Center spinner visually
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0; // Remove margin for centering
-  }
-}
 
-&--disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  background-color: #e9ecef; // Override background for disabled state
-  color: #6c757d; // Override text color for disabled state
-  border-color: #e9ecef; // Override border for disabled state
-}
+  &--danger {
+    background-color: #dc3545;
+    color: white;
+    &:hover:not([disabled]) {
+      background-color: #c82333;
+    }
+    &:active:not([disabled]) {
+      background-color: #bd2130;
+    }
+  }
 
-&--full-width {
-  width: 100%;
+  &--outlined {
+    background-color: transparent;
+    border: 1px solid #007bff;
+    color: #007bff;
+
+    &:hover:not([disabled]) {
+      background-color: #e9f5ff;
+      border-color: #0056b3;
+      color: #0056b3;
+    }
+
+    &:active:not([disabled]) {
+      background-color: #cce5ff;
+      border-color: #004085;
+      color: #004085;
+    }
+  }
+
+  &--text {
+    background-color: transparent;
+    color: #007bff;
+    padding: 0.5rem 0.75rem; // Text buttons are usually less padded
+
+    &:hover:not([disabled]) {
+      background-color: rgba(0, 123, 255, 0.08);
+      color: #0056b3;
+    }
+
+    &:active:not([disabled]) {
+      background-color: rgba(0, 123, 255, 0.15);
+      color: #004085;
+    }
+  }
+
+  // Sizes
+  &--small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  &--medium {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+  }
+
+  &--large {
+    padding: 1rem 1.75rem;
+    font-size: 1.125rem;
+  }
+
+  // States
+  &--loading {
+    .common-button__text {
+      visibility: hidden; // Hide text during loading
+    }
+    .common-button__icon {
+      visibility: hidden; // Hide icon during loading
+    }
+    .common-button__spinner {
+      position: absolute; // Center spinner visually
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0; // Remove margin for centering
+    }
+  }
+
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #e9ecef; // Override background for disabled state
+    color: #6c757d; // Override text color for disabled state
+    border-color: #e9ecef; // Override border for disabled state
+  }
+
+  &--full-width {
+    width: 100%;
+  }
 }

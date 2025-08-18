@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+
+    & > nav {
+        max-width: 300px;
+        background-color: #2a6fdf;
+        height: 100%;
+        padding: 20px 10px 10px;
+        flex: 1;
+        justify-content: center;
+
+        .selected {
+            background-color: #1a4fcc;
+            border-radius: 8px;
+        }
+
+        & > ul > li {
+            margin-top: 10px;
+            font-size: 16px;
+            padding: 10px 90px 10px 10px;
+
+            & > a {
+                color: white;
+            }
+
+            &:first-child {
+                margin-top: 0px;
+            }
+        }
+    }
+    & > div {
+        padding: 0 20px;
+        flex: 8;
+        height: 100%;
+    }
+}
