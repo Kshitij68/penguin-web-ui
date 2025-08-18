@@ -9,7 +9,7 @@ import React, {
 import toast from "react-hot-toast";
 
 // CONSTANTS
-import { BASE_URL } from "../utils/url";
+import { FETCH_DB_NAMES_URL, FETCH_ROLES_URL, CREATE_REPORT_URL, VALIDATE_QUERY } from "../utils/url";
 
 // Interfaces
 interface PermissionRow {
@@ -79,7 +79,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchDatabases = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/dbnames`);
+      const response = await fetch(FETCH_DB_NAMES_URL);
       const result = await response.json();
       const databases = result.db_name.map((database: string) => ({
         label: database,
@@ -93,7 +93,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/roles`);
+      const response = await fetch(FETCH_ROLES_URL);
       const result = await response.json();
       setRoles(result.roles);
     } catch (error) {
@@ -108,7 +108,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   }: ValidateQueryProps): Promise<any> => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/validate-sql-query", {
+      const response = await fetch(VALIDATE_QUERY, {
         method: "POST",
         body: JSON.stringify({ query, db_name }),
         headers: {
@@ -151,7 +151,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const createReport = async ({ payload }: CreateReportProps): Promise<any> => {
     try {
       setLoading(true);
-      const response = await fetch(`${BASE_URL}/create-report`, {
+      const response = await fetch(CREATE_REPORT_URL, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
