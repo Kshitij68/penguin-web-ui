@@ -1,0 +1,64 @@
+// Base container for the field
+.field-container {
+  margin-bottom: 1.5rem; // Space between fields
+  display: flex;
+  flex-direction: column;
+}
+
+// Label for the field
+.field-label {
+  display: block; // Ensures label takes its own line
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+// Common styles for input, select, and textarea elements
+.field-input-element {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box; // Include padding and border in the element's total width and height
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff; // Highlight border on focus
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); // Subtle shadow
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+}
+
+// Specific style for select element if needed
+.field-select-element {
+  // Add any specific styles for select if it differs significantly from input/textarea
+  // E.g., background-image for a custom arrow, different padding etc.
+  appearance: none; // Remove default browser select styles for better cross-browser consistency
+  background-color: white; // Ensure consistent background
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23424242" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem; // Make space for the custom arrow
+}
+
+// Error specific styles
+.field-container-error {
+  .field-input-element {
+    border-color: #dc3545; // Red border for error
+  }
+}
+
+.field-error-message {
+  color: #dc3545; // Red text for error message
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block; // Ensure it takes its own line
+}
