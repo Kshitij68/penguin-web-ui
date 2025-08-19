@@ -150,7 +150,8 @@ const ConfigureAccess = () => {
         cell: (info: any) => {
           const row = info.row || {};
           const { original, index } = row || {};
-          const canDelete = original || {};
+          const { canDelete } = original || {};
+          
           return (
             <div
               className={classNames("delete", {
