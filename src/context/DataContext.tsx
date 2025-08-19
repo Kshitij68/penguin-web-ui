@@ -162,6 +162,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         },
         body: JSON.stringify(payload),
       });
+      const result = await response.json();
+      const { error } = result || {}
+
       if (response.status === 200) {
         setLoading(false);
         toast.success("Report created successfully");
@@ -169,6 +172,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setColumns([]);
         setCurrentStep(0);
         setFormData(INITIAL_FORM_STATE);
+      } else {
+        setLoading(false)
+        toast.error(error || "Error creating report, please try again later")
       }
     } catch (error) {
       setLoading(false);
