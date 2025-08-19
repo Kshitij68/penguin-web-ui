@@ -116,13 +116,14 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         },
       });
 
+      const result = await response.json();
+      const { columns, error } = result || {};
+
       if (response.status === 200) {
         setLoading(false);
         toast.success("Query validated Successfully");
         onSuccess();
-        const result = await response.json();
-        const { columns } = result || {};
-
+        
         const tableData = columns.map(
           ({
             col_name,
@@ -141,11 +142,14 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         );
         setData(tableData);
         setColumns(columns);
+      } else {
+        setLoading(false)
+        toast.error(error)
       }
     } catch (error) {
       setLoading(false);
       toast.error("Error validating query, please try again later");
-    }
+    } 
   };
 
   const createReport = async ({ payload }: CreateReportProps): Promise<any> => {
