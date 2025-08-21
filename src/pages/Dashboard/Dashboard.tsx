@@ -1,5 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
+import classNames from "classnames";
+
+// ASSETS
+import { FaRegCircleCheck } from "react-icons/fa6"
 
 // COMPONENTS
 import StepProgress from "../../components/common/StepProgress/StepProgress";
@@ -8,18 +12,19 @@ import SelectDatabase, { SelectDatabaseProps } from "./components/SelectDatabase
 import ConfigureAccess from "./components/ConfigureAccess/ConfigureAccess";
 import SelectQuery, { SelectQueryProps } from "./components/SelectQuery/SelectQuery";
 import Loader from "../../components/common/Loader/Loader";
+import CreateStages from "./components/CreateStages/CreateStages";
 
 // CONTEXT
 import { useDataContext } from "../../context/DataContext";
 
+// CONSTANTS & UTILS
+import { FLOW_TYPES, FORM_STEPS } from "../../utils/constants";
+
 // CSS
 import "./Dashboard.scss";
 
-const FORM_STEPS = [
-  { label: "Select Database" },
-  { label: "Enter Query" },
-  { label: "Configure Access" },
-];
+
+const { STAGED_FLOW } = FLOW_TYPES
 
 export type FormData = {
   report_name: string;
@@ -38,9 +43,11 @@ const STEP_COMPONENTS: ComponentMap = {
   0: SelectDatabase,
   1: SelectQuery,
   2: ConfigureAccess,
+  3: CreateStages
 };
 
 const Dashboard = () => {
+  const [flow, setFlow] = useState("")
   const {
     data,
     validateQuery,
@@ -53,6 +60,10 @@ const Dashboard = () => {
     setFormData,
   } = useDataContext();
 
+  const isStageFlow = flow === STAGED_FLOW;
+  const isQueryStep = currentStep === 2;
+  const isLastStep = isStageFlow ? currentStep - 1 === FORM_STEPS.length : currentStep === FORM_STEPS.length;
+
   const handleFormData = (key: string, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -64,16 +75,18 @@ const Dashboard = () => {
         database: "",
         query: "",
       });
+      setFlow("")
+      setCurrentStep(null)
     };
   }, []);
 
-  const StepComponent = STEP_COMPONENTS[currentStep];
+  const StepComponent = STEP_COMPONENTS[currentStep - 1];
 
   const getDisabledRule = (step: number) => {
     switch (step) {
-      case 0:
-        return !formData.report_name || !formData.database;
       case 1:
+        return !formData.report_name || !formData.database;
+      case 2:
         return !formData.query;
       default:
         return false;
@@ -111,46 +124,69 @@ const Dashboard = () => {
     createReport({ payload: finalPayload });
   };
 
-  const isQueryStep = currentStep === 1;
-  const isLastStep = currentStep === FORM_STEPS.length - 1;
+
 
   return (
     <div className="dashboard-container">
-      <h3>Create New report</h3>
-      <div className="form-container">
-        <StepProgress steps={FORM_STEPS} currentStep={currentStep} />
-        <StepComponent handleFormData={handleFormData} formData={formData} />
-        <div className="footer">
-          {currentStep > 0 && (
-            <Button onClick={() => setCurrentStep((prev) => prev - 1)}>
-              Previous
-            </Button>
-          )}
-          <div>
-            {isQueryStep && (
-              <Button
-                className="validate-button"
-                disabled={getDisabledRule(currentStep)}
-                onClick={() => handleValidate()}
-              >
-                Validate
-              </Button>
-            )}
-            {!isQueryStep && (
-              <Button
-                onClick={() =>
-                  isLastStep
-                    ? handleSubmit()
-                    : setCurrentStep((prev) => prev + 1)
-                }
-                disabled={getDisabledRule(currentStep)}
-              >
-                {isLastStep ? "Submit" : "Next"}
-              </Button>
-            )}
+      {!flow || !currentStep ?
+        <div className="flow-container">
+          <span>Select a flow to continue. Steps will be shown next.</span>
+          <h3>Choose report creation flow</h3>
+          <div className="separator" />
+          <div className="toggle-flow">
+            {Object.values(FLOW_TYPES).map(value => {
+              const isSelected = flow === value;
+              return <div className={classNames("card", { selected: isSelected })} onClick={() => setFlow(value)}>
+                <div>
+                  <span>{value}</span>
+                  <span></span>
+                </div>
+
+                {isSelected && <FaRegCircleCheck />}
+              </div>
+            })}
           </div>
-        </div>
-      </div>
+          <div className="flex" style={{ marginTop: "40px" }}>
+            <Button style={{ marginLeft: "auto" }} variant="outlined" disabled={!flow} onClick={() => setCurrentStep(1)}>Continue</Button>
+          </div>
+
+        </div> : <>
+          <h3>Create New report</h3>
+          <div className="form-container">
+            <StepProgress steps={!isStageFlow ? FORM_STEPS : [...FORM_STEPS, { label: "Create stage" }]} currentStep={currentStep - 1} />
+            <StepComponent handleFormData={handleFormData} formData={formData} />
+            <div className="footer">
+              {currentStep > 1 && (
+                <Button onClick={() => setCurrentStep((prev) => prev - 1)}>
+                  Previous
+                </Button>
+              )}
+              <div>
+                {isQueryStep && (
+                  <Button
+                    className="validate-button"
+                    disabled={getDisabledRule(currentStep - 1)}
+                    onClick={() => handleValidate()}
+                  >
+                    Validate
+                  </Button>
+                )}
+                {!isQueryStep && (
+                  <Button
+                    onClick={() =>
+                      isLastStep
+                        ? handleSubmit()
+                        : setCurrentStep((prev) => prev + 1)
+                    }
+                    disabled={getDisabledRule(currentStep - 1)}
+                  >
+                    {isLastStep ? "Submit" : "Next"}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div></>
+      }
       {loading ? <Loader /> : null}
       <Toaster position="top-left" />
     </div>

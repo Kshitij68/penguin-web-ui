@@ -9,7 +9,7 @@ interface DropdownOption {
 }
 
 interface FieldProps {
-  label: string;
+  label?: string;
   name: string;
   value: string | number; // Value can be string or number (e.g., for type="number")
   onChange: (
@@ -101,9 +101,8 @@ const Field: React.FC<UnifiedFieldProps> = ({
 
   return (
     <div
-      className={`field-container ${
-        errorMessage ? "field-container-error" : ""
-      }`}
+      className={`field-container ${errorMessage ? "field-container-error" : ""
+        }`}
     >
       <label htmlFor={name} className="field-label">
         {label}

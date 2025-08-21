@@ -74,7 +74,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [roles, setRoles] = useState([]);
   const [columns, setColumns] = useState<ColumnDef<PermissionRow>[]>([]);
   const [loading, setLoading] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
 
   const fetchDatabases = async () => {
@@ -123,7 +123,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
         toast.success("Query validated Successfully");
         onSuccess();
-        
+
         const tableData = columns.map(
           ({
             col_name,
@@ -149,7 +149,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       setLoading(false);
       toast.error("Error validating query, please try again later");
-    } 
+    }
   };
 
   const createReport = async ({ payload }: CreateReportProps): Promise<any> => {

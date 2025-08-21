@@ -20,7 +20,7 @@ import { COLUMN_DATA_TYPES } from "../../../../utils/constants";
 // CSS
 import "./ConfigureAccess.scss";
 
-interface PermissionRow {
+export interface PermissionRow {
   item: string;
   [key: string]: boolean | string;
 }
@@ -151,7 +151,7 @@ const ConfigureAccess = () => {
           const row = info.row || {};
           const { original, index } = row || {};
           const { canDelete } = original || {};
-          
+
           return (
             <div
               className={classNames("delete", {
