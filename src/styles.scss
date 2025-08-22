@@ -23,3 +23,42 @@ ul {
 .flex {
     display: flex;
 }
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+// Define spacing scale (you can customize)
+$spacings: (
+    0: 0,
+    1: 0.25rem,
+    2: 0.5rem,
+    3: 0.75rem,
+    4: 1rem,
+    5: 1.25rem,
+    6: 1.5rem,
+    8: 2rem,
+    10: 2.5rem,
+    12: 3rem,
+    16: 4rem
+);
+
+// Generate mt-{key} classes
+@each $key, $value in $spacings {
+    .mt-#{$key} {
+        margin-top: $value;
+    }
+}
+
+// Generate mb-{key} classes
+@each $key, $value in $spacings {
+    .mb-#{$key} {
+        margin-bottom: $value;
+    }
+}

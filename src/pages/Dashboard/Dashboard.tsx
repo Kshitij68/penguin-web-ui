@@ -15,7 +15,7 @@ import Loader from "../../components/common/Loader/Loader";
 import CreateStages from "./components/CreateStages/CreateStages";
 
 // CONTEXT
-import { useDataContext } from "../../context/DataContext";
+import { INITIAL_FORM_STATE, useDataContext } from "../../context/DataContext";
 
 // CONSTANTS & UTILS
 import { FLOW_TYPES, FORM_STEPS } from "../../utils/constants";
@@ -30,6 +30,7 @@ export type FormData = {
   report_name: string;
   database: string;
   query: string;
+  stages?: any[];
 };
 
 type ComponentMap = {
@@ -70,11 +71,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     return () => {
-      setFormData({
-        report_name: "",
-        database: "",
-        query: "",
-      });
+      setFormData(INITIAL_FORM_STATE);
       setFlow("")
       setCurrentStep(null)
     };
@@ -84,9 +81,9 @@ const Dashboard = () => {
 
   const getDisabledRule = (step: number) => {
     switch (step) {
-      case 1:
+      case 0:
         return !formData.report_name || !formData.database;
-      case 2:
+      case 1:
         return !formData.query;
       default:
         return false;
@@ -123,8 +120,6 @@ const Dashboard = () => {
     };
     createReport({ payload: finalPayload });
   };
-
-
 
   return (
     <div className="dashboard-container">

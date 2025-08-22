@@ -1,4 +1,5 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useMemo, useCallback, useState, useEffect } from "react";
+import { debounce } from "lodash";
 
 // CSS
 import "./Field.scss";
@@ -18,6 +19,7 @@ interface FieldProps {
   placeholder?: string;
   errorMessage?: string; // Optional prop to display error messages
   disabled?: boolean;
+  useDebounce?: boolean;
 }
 
 interface TextFieldProps extends FieldProps {
@@ -48,13 +50,42 @@ const Field: React.FC<UnifiedFieldProps> = ({
   placeholder,
   errorMessage,
   disabled = false,
+  useDebounce = false,
   ...rest // To capture type-specific props like 'options' or 'rows'
 }) => {
+
+  const [internalValue, setInternalValue] = useState(value);
+
+  useEffect(() => {
+    setInternalValue(value);
+  }, [value]);
+
+  const debouncedEmitChange = useMemo(() => {
+    return debounce((e: ChangeEvent<any>) => {
+      onChange(e);
+    }, 500);
+  }, [onChange]);
+
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      const newVal = e.target.value;
+      setInternalValue(newVal); // update immediately for UI
+
+      if (useDebounce) {
+        e.persist?.(); // keep event for debounce
+        debouncedEmitChange(e);
+      } else {
+        onChange(e);
+      }
+    },
+    [useDebounce, debouncedEmitChange, onChange]
+  );
+
   const commonProps = {
     id: name, // Use name as id for accessibility
     name,
-    value,
-    onChange,
+    value: internalValue,
+    onChange: handleChange,
     placeholder,
     disabled,
     className: "field-input-element", // Common class for input, select, textarea

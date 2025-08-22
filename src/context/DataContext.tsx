@@ -37,10 +37,17 @@ interface CreateReportProps {
   payload: any;
 }
 
-interface FormDataRow {
+export interface Stage {
+  stage_name: string;
+  stage_description: string;
+  roles: string[];
+}
+
+export interface FormDataRow {
   report_name: string;
   database: string;
   query: string;
+  stages?: Stage[];
 }
 
 interface DataContextType {
@@ -60,10 +67,11 @@ interface DataContextType {
   setFormData: React.Dispatch<React.SetStateAction<FormDataRow>>;
 }
 
-const INITIAL_FORM_STATE = {
+export const INITIAL_FORM_STATE: FormDataRow = {
   report_name: "",
   database: "",
   query: "",
+  stages: [{ stage_name: "", stage_description: "", roles: [] }, { stage_name: "", stage_description: "", roles: [] }]
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -186,6 +194,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     fetchDatabases();
     fetchRoles();
   }, []);
+
+  console.log("**formData in CONTEXT: ", formData)
 
   return (
     <DataContext.Provider

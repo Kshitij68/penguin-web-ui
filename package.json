@@ -4,39 +4,40 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-      "start": "webpack serve --mode development",
-      "build": "webpack --mode production"
+        "start": "webpack serve --mode development",
+        "build": "webpack --mode production"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
-      "@tanstack/react-table": "^8.21.3",
-      "classnames": "^2.5.1",
-      "react": "^19.1.1",
-      "react-dom": "^19.1.1",
-      "react-hot-toast": "^2.5.2",
-      "react-icons": "^5.0.0",
-      "react-router-dom": "^7.8.0"
+        "@tanstack/react-table": "^8.21.3",
+        "classnames": "^2.5.1",
+        "lodash": "^4.17.21",
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1",
+        "react-hot-toast": "^2.5.2",
+        "react-icons": "^5.0.0",
+        "react-router-dom": "^7.8.0"
     },
     "devDependencies": {
-      "@babel/core": "^7.28.0",
-      "@babel/preset-env": "^7.28.0",
-      "@babel/preset-react": "^7.27.1",
-      "@babel/preset-typescript": "^7.27.1",
-      "@types/react": "^19.1.9",
-      "@types/react-dom": "^19.1.7",
-      "babel-loader": "^10.0.0",
-      "css-loader": "^7.1.2",
-      "html-webpack-plugin": "^5.6.3",
-      "sass": "^1.90.0",
-      "sass-loader": "^16.0.5",
-      "style-loader": "^4.0.0",
-      "ts-loader": "^9.5.2",
-      "typescript": "^5.9.2",
-      "webpack": "^5.101.0",
-      "webpack-cli": "^6.0.1",
-      "webpack-dev-server": "^5.2.2"
+        "@babel/core": "^7.28.0",
+        "@babel/preset-env": "^7.28.0",
+        "@babel/preset-react": "^7.27.1",
+        "@babel/preset-typescript": "^7.27.1",
+        "@types/lodash": "^4.17.20",
+        "@types/react": "^19.1.9",
+        "@types/react-dom": "^19.1.7",
+        "babel-loader": "^10.0.0",
+        "css-loader": "^7.1.2",
+        "html-webpack-plugin": "^5.6.3",
+        "sass": "^1.90.0",
+        "sass-loader": "^16.0.5",
+        "style-loader": "^4.0.0",
+        "ts-loader": "^9.5.2",
+        "typescript": "^5.9.2",
+        "webpack": "^5.101.0",
+        "webpack-cli": "^6.0.1",
+        "webpack-dev-server": "^5.2.2"
     }
-  }
-  
+}
