@@ -22,9 +22,13 @@
   border-radius: 8px;
   font-size: 1rem;
   box-sizing: border-box; // Include padding and border in the element's total width and height
-  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 
-  &:focus {
+  &:focus,
+  &:focus-within {
+    // use focus-within for multiselect container
     outline: none;
     border-color: #007bff; // Highlight border on focus
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); // Subtle shadow
@@ -38,15 +42,13 @@
 
 // Specific style for select element if needed
 .field-select-element {
-  // Add any specific styles for select if it differs significantly from input/textarea
-  // E.g., background-image for a custom arrow, different padding etc.
-  appearance: none; // Remove default browser select styles for better cross-browser consistency
-  background-color: white; // Ensure consistent background
+  appearance: none;
+  background-color: white;
   background-image: url('data:image/svg+xml;utf8,<svg fill="%23424242" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1rem;
-  padding-right: 2.5rem; // Make space for the custom arrow
+  padding-right: 2.5rem;
 }
 
 // Error specific styles
@@ -61,4 +63,66 @@
   font-size: 0.85rem;
   margin-top: 0.25rem;
   display: block; // Ensure it takes its own line
+}
+
+// --- NEW STYLES FOR MULTI-SELECT ---
+
+// Container for pills and the select dropdown
+.multiselect-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px; // Set a minimum height consistent with other inputs
+  padding: 0.4rem 0.75rem; // Adjust padding for internal elements
+
+  // The actual select element inside the multiselect
+  .multiselect-select {
+    flex-grow: 1; // Takes up remaining space
+    border: none;
+    outline: none;
+    padding: 0.25rem;
+    font-size: 1rem;
+    background-color: transparent;
+    // Align with pills if they exist
+    min-width: 120px;
+  }
+}
+
+// Style for each individual pill
+.pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 16px; // Makes it pill-shaped
+  padding: 0.25rem 0.75rem;
+  font-size: 0.9rem;
+  white-space: nowrap; // Prevents text wrapping
+
+  .pill-label {
+    margin-right: 0.5rem;
+  }
+
+  // The 'x' remove button on the pill
+  .pill-remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    color: #555;
+    font-size: 0.8rem;
+
+    &:hover {
+      color: #dc3545; // Red on hover
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      color: #999;
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useMemo, useCallback, useState, useEffect } from "react";
 import { debounce } from "lodash";
+import { FaTimes } from "react-icons/fa"; // Added for the remove icon
 
 // CSS
 import "./Field.scss";
@@ -9,50 +10,126 @@ interface DropdownOption {
   label: string;
 }
 
-interface FieldProps {
+// BASE PROPS - Common to all field types
+interface BaseFieldProps {
   label?: string;
   name: string;
-  value: string | number; // Value can be string or number (e.g., for type="number")
+  placeholder?: string;
+  errorMessage?: string;
+  disabled?: boolean;
+}
+
+// PROPS FOR STANDARD FIELDS (text, textarea, dropdown)
+interface StandardFieldProps extends BaseFieldProps {
+  value: string | number;
   onChange: (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => void;
-  placeholder?: string;
-  errorMessage?: string; // Optional prop to display error messages
-  disabled?: boolean;
   useDebounce?: boolean;
 }
 
-interface TextFieldProps extends FieldProps {
-  type: "text" | "password" | "email" | "number" | "date"; // Other HTML input types
+interface TextFieldProps extends StandardFieldProps {
+  type: "text" | "password" | "email" | "number" | "date";
 }
 
-interface TextAreaFieldProps extends FieldProps {
+interface TextAreaFieldProps extends StandardFieldProps {
   type: "textarea";
-  rows?: number; // Specific for textarea
+  rows?: number;
 }
 
-interface DropdownFieldProps extends FieldProps {
+interface DropdownFieldProps extends StandardFieldProps {
   type: "dropdown";
-  options: DropdownOption[]; // Specific for dropdown
+  options: DropdownOption[];
+}
+
+// PROPS FOR NEW MULTI-SELECT FIELD
+interface MultiSelectDropdownFieldProps extends BaseFieldProps {
+  type: "multiselect";
+  options: DropdownOption[];
+  value: string[]; // Value is an array of strings
+  onChange: (name: string, value: string[]) => void; // Custom onChange handler
 }
 
 // Union type for all possible Field component props
 type UnifiedFieldProps =
   | TextFieldProps
   | TextAreaFieldProps
-  | DropdownFieldProps;
+  | DropdownFieldProps
+  | MultiSelectDropdownFieldProps;
 
-const Field: React.FC<UnifiedFieldProps> = ({
-  label,
-  name,
-  value,
-  onChange,
-  placeholder,
-  errorMessage,
-  disabled = false,
-  useDebounce = false,
-  ...rest // To capture type-specific props like 'options' or 'rows'
-}) => {
+const Field: React.FC<UnifiedFieldProps> = (props) => {
+  const { name, label, errorMessage, disabled, placeholder } = props;
+
+  // --- RENDER LOGIC FOR MULTI-SELECT DROPDOWN ---
+  if (props.type === "multiselect") {
+    const { options, value: selectedValues, onChange } = props;
+
+    const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+      const selectedValue = e.target.value;
+      if (selectedValue && !selectedValues.includes(selectedValue)) {
+        onChange(name, [...selectedValues, selectedValue]);
+      }
+    };
+
+    const handleRemove = (valueToRemove: string) => {
+      onChange(name, selectedValues.filter((v) => v !== valueToRemove));
+    };
+
+    // Filter out already selected options from the dropdown
+    const availableOptions = options.filter(
+      (opt) => !selectedValues.includes(opt.value)
+    );
+
+    // Get full option objects for selected values to display labels in pills
+    const selectedOptionsData = selectedValues.map(
+      val => options.find(opt => opt.value === val) || { value: val, label: val }
+    );
+
+    return (
+      <div
+        className={`field-container ${errorMessage ? "field-container-error" : ""}`}
+      >
+        {label && <label className="field-label">{label}</label>}
+        <div className="multiselect-container field-input-element">
+          {selectedOptionsData.map((option) => (
+            <div key={option.value} className="pill">
+              <span className="pill-label">{option.label}</span>
+              <button
+                type="button"
+                className="pill-remove-btn"
+                onClick={() => handleRemove(option.value)}
+                disabled={disabled}
+              >
+                <FaTimes />
+              </button>
+            </div>
+          ))}
+          <select
+            id={name}
+            value="" // Always reset to show the placeholder
+            onChange={handleSelect}
+            className="multiselect-select"
+            disabled={disabled || availableOptions.length === 0}
+          >
+            <option value="" disabled>
+              {placeholder || "Select..."}
+            </option>
+            {availableOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        {errorMessage && (
+          <span className="field-error-message">{errorMessage}</span>
+        )}
+      </div>
+    );
+  }
+
+  // --- RENDER LOGIC FOR ALL OTHER STANDARD FIELDS ---
+  const { value, onChange, useDebounce = false, ...rest } = props;
 
   const [internalValue, setInternalValue] = useState(value);
 
@@ -68,11 +145,10 @@ const Field: React.FC<UnifiedFieldProps> = ({
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-      const newVal = e.target.value;
-      setInternalValue(newVal); // update immediately for UI
+      setInternalValue(e.target.value);
 
       if (useDebounce) {
-        e.persist?.(); // keep event for debounce
+        e.persist?.();
         debouncedEmitChange(e);
       } else {
         onChange(e);
@@ -82,43 +158,32 @@ const Field: React.FC<UnifiedFieldProps> = ({
   );
 
   const commonProps = {
-    id: name, // Use name as id for accessibility
+    id: name,
     name,
     value: internalValue,
     onChange: handleChange,
     placeholder,
     disabled,
-    className: "field-input-element", // Common class for input, select, textarea
+    className: "field-input-element",
   };
 
   const renderInputField = () => {
-    switch ((rest as UnifiedFieldProps).type) {
+    switch (rest.type) {
       case "text":
       case "password":
       case "email":
       case "number":
       case "date":
-        return <input {...commonProps} type={(rest as TextFieldProps).type} />;
+        return <input {...commonProps} type={rest.type} />;
       case "textarea":
         return (
-          <textarea
-            {...commonProps}
-            rows={(rest as TextAreaFieldProps).rows || 4} // Default rows
-          />
+          <textarea {...commonProps} rows={rest.rows || 4} />
         );
       case "dropdown":
-        const dropdownProps = rest as DropdownFieldProps;
         return (
-          <select
-            {...commonProps}
-            className="field-input-element field-select-element" // Specific class for select
-          >
-            {placeholder && (
-              <option value="" disabled>
-                {placeholder}
-              </option>
-            )}{" "}
-            {dropdownProps.options.map((option) => (
+          <select {...commonProps} className="field-input-element field-select-element">
+            {placeholder && <option value="">{placeholder}</option>}
+            {rest.options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -126,18 +191,15 @@ const Field: React.FC<UnifiedFieldProps> = ({
           </select>
         );
       default:
-        return null; // Should ideally not happen with union types, but good for safety
+        return null;
     }
   };
 
   return (
     <div
-      className={`field-container ${errorMessage ? "field-container-error" : ""
-        }`}
+      className={`field-container ${errorMessage ? "field-container-error" : ""}`}
     >
-      <label htmlFor={name} className="field-label">
-        {label}
-      </label>
+      {label && <label htmlFor={name} className="field-label">{label}</label>}
       {renderInputField()}
       {errorMessage && (
         <span className="field-error-message">{errorMessage}</span>

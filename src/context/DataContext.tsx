@@ -38,8 +38,8 @@ interface CreateReportProps {
 }
 
 export interface Stage {
-  stage_name: string;
-  stage_description: string;
+  name: string;
+  description: string;
   roles: string[];
 }
 
@@ -71,7 +71,7 @@ export const INITIAL_FORM_STATE: FormDataRow = {
   report_name: "",
   database: "",
   query: "",
-  stages: [{ stage_name: "", stage_description: "", roles: [] }, { stage_name: "", stage_description: "", roles: [] }]
+  stages: [{ name: "", description: "", roles: [] }, { name: "", description: "", roles: [] }]
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);

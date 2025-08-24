@@ -1,25 +1,21 @@
-import React, { useMemo } from 'react';
-import { ColumnDef } from '@tanstack/react-table';
+import React from 'react';
+import classNames from 'classnames';
 
 // COMPONENTS
-import Table from '../../../../components/common/Table/Table';
 import Field from '../../../../components/common/Field/Field';
+import Button from '../../../../components/common/Button/Button';
+
+// ASSET
+import { MdDelete } from 'react-icons/md';
 
 // INTERFACE
 import { FormData } from '../../Dashboard';
 
+// CONTEXT
+import { useDataContext } from '../../../../context/DataContext';
+
 // CSS
 import "./CreateStage.scss"
-import Button from '../../../../components/common/Button/Button';
-import { MdDelete } from 'react-icons/md';
-import classNames from 'classnames';
-
-interface PermissionRow {
-    item: string;
-    stage_name: string;
-    stage_description: string;
-    roles: any[string];
-}
 
 type CreateStageProps = {
     formData: FormData;
@@ -28,6 +24,9 @@ type CreateStageProps = {
 
 
 const CreateStages: React.FC<CreateStageProps> = ({ formData, handleFormData }) => {
+
+    const { roles } = useDataContext()
+
     const handleStageChange = (index: any, key: string, value: any) => {
         const newStages = [...formData.stages];
         newStages[index] = {
@@ -39,7 +38,7 @@ const CreateStages: React.FC<CreateStageProps> = ({ formData, handleFormData }) 
 
     const addNewStage = () => {
         const newStage = [...formData.stages];
-        newStage.push({ stage_name: "", stage_description: "", roles: [] })
+        newStage.push({ name: "", description: "", roles: [] })
         handleFormData("stages", newStage)
     }
 
@@ -48,15 +47,25 @@ const CreateStages: React.FC<CreateStageProps> = ({ formData, handleFormData }) 
         handleFormData("stages", newStages)
     }
 
+    const rolesOptions = roles.map(role => ({ label: role.name, value: role.id }));
+
     return (
         <>
             <div className='stage-container'>
                 <div className='stages'>
                     {formData.stages.map((stage, index) => <div className='stage-row'>
                         <span className='stage-title'>Stage {index + 1}</span>
-                        <Field label='Name' useDebounce type='text' name='stage_name' onChange={(e) => handleStageChange(index, "stage_name", e.target.value)} value={stage.stage_name} />
-                        <Field label="Description" useDebounce type='text' name='stage_description' onChange={(e) => handleStageChange(index, "stage_description", e.target.value)} value={stage.stage_description} />
-                        <Field label='Roles' options={[]} type='dropdown' name="roles" onChange={(e) => console.log("roles: ", e.target.value)} value={""} />
+                        <Field label='Name' useDebounce type='text' name='name' onChange={(e) => handleStageChange(index, "name", e.target.value)} value={stage.name} />
+                        <Field label="Description" useDebounce type='text' name='description' onChange={(e) => handleStageChange(index, "description", e.target.value)} value={stage.description} />
+                        <Field
+                            type="multiselect"
+                            label="Role"
+                            name="role"
+                            placeholder="Add a role..."
+                            options={rolesOptions}
+                            value={stage.roles}
+                            onChange={(_: string, value: string[]) => handleStageChange(index, "roles", value)}
+                        />
                         <div className='flex-center'><MdDelete className={classNames('delete flex-center', { disabled: index <= 1 })} onClick={() => deleteStage(index)} /></div>
                     </div>)}
                 </div>

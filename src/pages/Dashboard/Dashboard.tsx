@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import classNames from "classnames";
 
@@ -79,16 +79,23 @@ const Dashboard = () => {
 
   const StepComponent = STEP_COMPONENTS[currentStep - 1];
 
-  const getDisabledRule = (step: number) => {
-    switch (step) {
+  const getDisabledRule = useMemo(() => {
+    switch (currentStep - 1) {
       case 0:
         return !formData.report_name || !formData.database;
       case 1:
         return !formData.query;
+      case 3:
+        return formData.stages.some(item =>
+          Object.values(item).some(value =>
+            (typeof value === 'string' && value === '') ||
+            (Array.isArray(value) && value.length === 0)
+          )
+        );
       default:
         return false;
     }
-  };
+  }, [formData, currentStep]);
 
   const handleValidate = () => {
     validateQuery({
@@ -160,7 +167,7 @@ const Dashboard = () => {
                 {isQueryStep && (
                   <Button
                     className="validate-button"
-                    disabled={getDisabledRule(currentStep - 1)}
+                    disabled={getDisabledRule}
                     onClick={() => handleValidate()}
                   >
                     Validate
@@ -173,7 +180,7 @@ const Dashboard = () => {
                         ? handleSubmit()
                         : setCurrentStep((prev) => prev + 1)
                     }
-                    disabled={getDisabledRule(currentStep - 1)}
+                    disabled={getDisabledRule}
                   >
                     {isLastStep ? "Submit" : "Next"}
                   </Button>
