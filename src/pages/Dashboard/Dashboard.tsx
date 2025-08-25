@@ -15,7 +15,7 @@ import Loader from "../../components/common/Loader/Loader";
 import CreateStages from "./components/CreateStages/CreateStages";
 
 // CONTEXT
-import { INITIAL_FORM_STATE, useDataContext } from "../../context/DataContext";
+import { CreateReportPayloadProps, INITIAL_FORM_STATE, useDataContext } from "../../context/DataContext";
 
 // CONSTANTS & UTILS
 import { FLOW_TYPES, FORM_STEPS } from "../../utils/constants";
@@ -108,7 +108,7 @@ const Dashboard = () => {
   };
 
   const handleSubmit = () => {
-    const finalPayload = {
+    let finalPayload: CreateReportPayloadProps = {
       reportName: formData.report_name,
       sqlScript: formData.query,
       columns: data.map((column) => {
@@ -125,6 +125,7 @@ const Dashboard = () => {
         };
       }),
     };
+    if (flow === STAGED_FLOW) finalPayload.stages = formData.stages
     createReport({ payload: finalPayload });
   };
 

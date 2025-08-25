@@ -33,8 +33,19 @@ interface ValidateQueryProps {
   onSuccess: () => void;
 }
 
+export type CreateReportPayloadProps = {
+  reportName: string;
+  sqlScript: string;
+  columns: {
+    name: string;
+    type: string | boolean;
+    writableBy: string[];
+  }[];
+  stages?: any[]; // optional
+};
+
 interface CreateReportProps {
-  payload: any;
+  payload: CreateReportPayloadProps;
 }
 
 export interface Stage {
@@ -194,8 +205,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     fetchDatabases();
     fetchRoles();
   }, []);
-
-  console.log("**formData in CONTEXT: ", formData)
 
   return (
     <DataContext.Provider
