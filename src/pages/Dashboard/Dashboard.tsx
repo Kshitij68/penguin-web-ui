@@ -48,7 +48,6 @@ const STEP_COMPONENTS: ComponentMap = {
 };
 
 const Dashboard = () => {
-  const [flow, setFlow] = useState("")
   const {
     data,
     validateQuery,
@@ -59,6 +58,8 @@ const Dashboard = () => {
     setCurrentStep,
     formData,
     setFormData,
+    flow,
+    setFlow
   } = useDataContext();
 
   const isStageFlow = flow === STAGED_FLOW;
