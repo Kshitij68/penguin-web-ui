@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 
 // PAGES
 import Reports from './pages/Reports/Reports';
@@ -25,7 +25,7 @@ const ROUTES: Array<RouteItem> = [
 const App: React.FC = () => {
     return (
         <DataProvider>
-            <Router>
+            <HashRouter>
                 <div className="container">
                     <Sidebar routes={ROUTES} />
                     <div>
@@ -35,7 +35,7 @@ const App: React.FC = () => {
                         </Routes>
                     </div>
                 </div>
-            </Router>
+            </HashRouter>
         </DataProvider>
     );
 };
