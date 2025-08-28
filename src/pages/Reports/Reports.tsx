@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // COMPONENTS
@@ -13,7 +13,7 @@ import "./Reports.scss";
 
 
 const Reports = () => {
-  const { reports } = useDataContext()
+  const { reports, fetchReports } = useDataContext()
 
   const navigate = useNavigate()
 
@@ -26,6 +26,10 @@ const Reports = () => {
     header: "Report URL",
     cell: (info: any) => <a target="_blank" href={info.getValue()}>{info.getValue()}</a>
   }]
+
+  useEffect(() => {
+    fetchReports();
+  },[])
 
   return (
     <div>

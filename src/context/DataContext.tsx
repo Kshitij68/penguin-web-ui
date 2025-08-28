@@ -85,6 +85,7 @@ interface DataContextType {
   reports: Report[];
   flow: string;
   setFlow: React.Dispatch<React.SetStateAction<string>>;
+  fetchReports: () => Promise<any>;
 }
 
 export const INITIAL_FORM_STATE: FormDataRow = {
@@ -250,7 +251,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setFormData,
         reports,
         flow,
-        setFlow
+        setFlow,
+        fetchReports
       }}
     >
       {children}
