@@ -83,6 +83,8 @@ interface DataContextType {
   formData: FormDataRow;
   setFormData: React.Dispatch<React.SetStateAction<FormDataRow>>;
   reports: Report[];
+  flow: string;
+  setFlow: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const INITIAL_FORM_STATE: FormDataRow = {
@@ -103,6 +105,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [currentStep, setCurrentStep] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [reports, setReport] = useState([])
+  const [flow, setFlow] = useState("")
 
   const fetchDatabases = async () => {
     try {
@@ -211,6 +214,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setColumns([]);
         setCurrentStep(0);
         setFormData(INITIAL_FORM_STATE);
+        setFlow("")
       } else {
         setLoading(false)
         toast.error(error || "Error creating report, please try again later")
@@ -244,7 +248,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setCurrentStep,
         formData,
         setFormData,
-        reports
+        reports,
+        flow,
+        setFlow
       }}
     >
       {children}
