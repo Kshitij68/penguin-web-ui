@@ -30,6 +30,11 @@ ul {
     align-items: center;
 }
 
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }

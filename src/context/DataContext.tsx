@@ -9,7 +9,7 @@ import React, {
 import toast from "react-hot-toast";
 
 // CONSTANTS
-import { FETCH_DB_NAMES_URL, FETCH_ROLES_URL, CREATE_REPORT_URL, VALIDATE_QUERY } from "../utils/url";
+import { FETCH_DB_NAMES_URL, FETCH_ROLES_URL, CREATE_REPORT_URL, VALIDATE_QUERY, FETCH_REPORT_URL } from "../utils/url";
 
 // Interfaces
 interface PermissionRow {
@@ -26,6 +26,12 @@ export interface RolesRow {
   id: string;
   name: string;
 }
+
+interface Report {
+  name: string;
+  url: string;
+  id: string;
+};
 
 interface ValidateQueryProps {
   query: string;
@@ -76,6 +82,7 @@ interface DataContextType {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   formData: FormDataRow;
   setFormData: React.Dispatch<React.SetStateAction<FormDataRow>>;
+  reports: Report[];
 }
 
 export const INITIAL_FORM_STATE: FormDataRow = {
@@ -95,6 +102,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
+  const [reports, setReport] = useState([])
 
   const fetchDatabases = async () => {
     try {
@@ -119,6 +127,18 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       toast.error("Error fetching roles, please try again later");
     }
   };
+
+  const fetchReports = async () => {
+    try {
+      const response = await fetch(FETCH_REPORT_URL);
+      if (response.status === 200) {
+        const result = await response.json();
+        setReport(result)
+      }
+    } catch (error) {
+      toast.error("Error fetching reports, please try again later");
+    }
+  }
 
   const validateQuery = async ({
     query,
@@ -204,6 +224,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     fetchDatabases();
     fetchRoles();
+    fetchReports()
   }, []);
 
   return (
@@ -223,6 +244,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setCurrentStep,
         formData,
         setFormData,
+        reports
       }}
     >
       {children}
